@@ -1,29 +1,32 @@
-REPORT zz_exerc08_30.
+REPORT zz_exerc09_30.
 
-DATA: v_resultado     TYPE char100,
-      v_resto_divisao TYPE i.
+DATA: "----------- Homem - Variáveis(h) ----------------
+  v_const_h_multiplicar   TYPE p  DECIMALS 1    VALUE '72.7',
+  v_const_h_subtrair      TYPE p  DECIMALS 1    VALUE '58',
+  "----------- Mulher - Variáveis(m) ----------------
+  v_const_m_multiplicar   TYPE p  DECIMALS 1    VALUE '62.1',
+  v_const_m_subtrair      TYPE p  DECIMALS 1    VALUE '44.7',
+  "--------------- Resultado ---------------------
+  v_resultado             TYPE p  DECIMALS 2.
 
 SELECTION-SCREEN BEGIN OF BLOCK b0 WITH FRAME TITLE text-tb0.
-PARAMETERS:  p_valor TYPE i.
+PARAMETERS:   p_altura TYPE p DECIMALS 2,
+              p_homem  RADIOBUTTON GROUP grp1,
+              p_mulher RADIOBUTTON GROUP grp1.
 SELECTION-SCREEN END OF BLOCK b0.
 
 START-OF-SELECTION.
-  PERFORM f_par_impar USING p_valor.
+  PERFORM f_calc_peso_ideal USING p_altura.
   PERFORM f_exibe_resultado.
 
-
-FORM f_par_impar USING p_valor.
-
-  v_resto_divisao = p_valor MOD 2.
-
-  CASE v_resto_divisao.
-    WHEN 0.
-      v_resultado = 'PAR'.
-    WHEN 1.
-      v_resultado = 'ÍMPAR'.
-  ENDCASE.
+FORM f_calc_peso_ideal USING p_altura.
+  IF p_homem EQ 'X'.
+    v_resultado = ( v_const_h_multiplicar * p_altura ) - v_const_h_subtrair.
+  ELSE.
+    v_resultado = ( v_const_m_multiplicar * p_altura ) - v_const_m_subtrair.
+  ENDIF.
 ENDFORM.
 
-form f_exibe_resultado.
-  MESSAGE i004(z30) WITH v_resultado.
+FORM f_exibe_resultado.
+  MESSAGE i005(z30) WITH v_resultado.
 ENDFORM.
